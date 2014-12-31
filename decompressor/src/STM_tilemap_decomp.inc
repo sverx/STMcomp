@@ -1,7 +1,7 @@
-; ***** Sverx's TileMap decompressor                            *****
-; ***** by sverx - https://github.com/sverx/STM_tilemap_decompr *****
+; ***** Sverx's TileMap decompressor                                             *****
+; ***** by sverx - https://github.com/sverx/STMcomp/tree/master/decompressor/src *****
 
-;  to use it, you have to do:
+;  to use it, you have to do this:
 ;     ld hl,compressed_tilemap     ; - set source address
 ;     ld de,VRAMAddress|$4000      ; - set destination VRAM address, ORed with $4000
 ;     call STM_tilemap_decompr
