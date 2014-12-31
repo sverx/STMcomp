@@ -82,7 +82,7 @@ bool checkHI (int i) {
 }
 
 __declspec(dllexport) const char* getName() {
-	return "Sverx's TileMap";
+	return "Sverx`s TileMap";
 }
 
 __declspec(dllexport) const char* getExt() {
