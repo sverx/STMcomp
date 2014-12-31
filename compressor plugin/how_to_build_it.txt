@@ -1,0 +1,4 @@
+
+gcc -c gfxcomp_stm.c
+gcc -shared -o gfxcomp_stm.dll gfxcomp_stm.o
+
