@@ -91,22 +91,22 @@ __declspec(dllexport) const char* getExt() {
 
 __declspec(dllexport) int compressTilemap(uint8_t* source, uint32_t width, uint32_t height, uint8_t* dest, uint32_t destLen) {
 
-    int i,j;
-    unsigned char tmp;
+  int i,j;
+  unsigned char tmp;
 
-    unsigned int in_size = width*height;
-    buf = (unsigned short int*)source;
-    outbuf = dest;
-    outsize = destLen;
+  unsigned int in_size = width*height;
+  buf = (unsigned short int*)source;
+  outbuf = dest;
+  outsize = destLen;
     
-    shoudchangeHH=false;
-    current=0;
-    cur_HH=0;
-    writepos=0;
+  shoudchangeHH=false;
+  current=0;
+  cur_HH=0;
+  writepos=0;
 
-    while (current<in_size) {
+  while (current<in_size) {
     
-    // check if the HH part is the same
+    // check if the HH part of the next tile is the same as what we have
     if (HI(cur_HH)!=HI(buf[current]))
       shoudchangeHH=true;
     
@@ -132,6 +132,8 @@ __declspec(dllexport) int compressTilemap(uint8_t* source, uint32_t width, uint3
         if (current+i==in_size) break;                      // leave if data ends
         if ((buf[current+i-1]+1)!=buf[current+i]) break;   // leave if no successive
       }
+      
+      cur_HH=buf[current]&0xff00;                           // make sure we keep the last HH  
       
       if (!checkHI(i))
         return (0);                                         // please give me more space for output
