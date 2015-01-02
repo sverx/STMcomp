@@ -133,7 +133,7 @@ __declspec(dllexport) int compressTilemap(uint8_t* source, uint32_t width, uint3
         if ((buf[current+i-1]+1)!=buf[current+i]) break;   // leave if no successive
       }
       
-      cur_HH=buf[current]&0xff00;                           // make sure we keep the last HH  
+      cur_HH=buf[current+i-1]&0xff00;                       // make sure we keep the last HH  
       
       if (!checkHI(i))
         return (0);                                         // please give me more space for output
