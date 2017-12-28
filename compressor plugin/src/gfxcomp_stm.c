@@ -82,7 +82,7 @@ bool checkHI (int i) {
 }
 
 __declspec(dllexport) const char* getName() {
-	return "Sverx`s TileMap";
+	return "ShrunkTileMap (compressed)";
 }
 
 __declspec(dllexport) const char* getExt() {
@@ -103,6 +103,12 @@ __declspec(dllexport) int compressTilemap(uint8_t* source, uint32_t width, uint3
   current=0;
   cur_HH=0;
   writepos=0;
+
+  // write header (it's just 1 byte and it stores the width -in tiles- of the map
+  if (writepos<outsize)
+    outbuf[writepos++]=width;     // write map width in tiles
+  else
+    return (0);                   // please give me more space for output
 
   while (current<in_size) {
     
