@@ -6,11 +6,12 @@ next bytes -- runs. type of run described by the two least significant bits of t
               according to the folowing:
 
 %nnnnnn01  -- dd : run of n+2 (2 to 65) *same word* value HHdd (a.k.a. "normal" RLE)
-%nnnnnn11  -- dd : run of n+2 (2 to 65) *successive word* values (HHdd, HHdd+1, HHdd+2 ...)
-                 : will eventually change HH too!
-%nnnnnn00  -- dd kk pp [...] : run of n (1 to 63) words using each of the following bytes (HHdd, HHkk, HHpp...) 
-                             : n=0 means end of compressed data
+%nnnnnn11  -- dd : run of n+2 (2 to 65) *successive word* values (HHdd, HHdd+1, HHdd+2 etc...)
+                 : will possibly change HH too!
+%nnnnnn00  -- dd kk pp [...] : run of n (1 to 63) words using each of the following bytes (HHdd, HHkk, HHpp, etc...) 
+                             : nnnnnn=0 means end of compressed data
 %hhhhht10   : set new HH to %000hhhhh 
-      t = 1 : set the value temporarily (revert to previous value after next run) 
+      t = 1 : set the value temporarily (revert to previous value after next run has been decompressed) 
       t = 0 : set it permanently
 (HH is initialized to $00 at launch, both on compressor and on decompressor)
+
