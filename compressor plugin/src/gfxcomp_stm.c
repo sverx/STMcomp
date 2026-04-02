@@ -15,11 +15,13 @@
 
 int in_size;
 int current;
-unsigned short int cur_HH;
+unsigned short int cur_HH,old_HH;
+bool was_temp_HH;
 unsigned int writepos;
 unsigned short int* buf;
 unsigned char* outbuf;
 unsigned int outsize;
+
 
 typedef unsigned char uint8_t;
 typedef unsigned int  uint32_t;
@@ -58,23 +60,34 @@ bool writeHI (unsigned char val, bool temp) {
 bool checkHI (int i) {
   bool is_temp;
 
-  if (current+i==in_size) {
-    is_temp=false;                         // make it permanent, no other check needed (because data is over)
-  } else if (HI(cur_HH)==HI(buf[current+i])) {
-      is_temp=true;                        // before this run==first of next run
-      if (HI(buf[current+i-1])==HI(buf[current+i])) {
-        is_temp=false;                     // last of this run==first of next run
-      }
-  } else {
-    is_temp=false;                         // before this run != first of next run
+  if (was_temp_HH) {
+    was_temp_HH=false;
+    cur_HH = old_HH;
   }
 
-  if (HI(cur_HH)!=HI(buf[current]))        // this run starts with a different HH than the previous one, so we should update the upper byte
+  if (HI(cur_HH)!=HI(buf[current])) {        // this run starts with a different HH than the previous one, so we should update the upper byte
+    // see if the new HH is got to be permanent or temporary
+    if (current+i==in_size) {
+      is_temp=false;                         // make it permanent, no other check needed (because data is over)
+    } else if (HI(cur_HH)==HI(buf[current+i])) {
+        is_temp=true;                        // before this run == first of next run
+        if (HI(buf[current+i-1])==HI(buf[current+i])) {
+          is_temp=false;                     // last of this run == first of next run
+        }
+    } else {
+      is_temp=false;                         // before this run != first of next run
+    }
+
     if (!writeHI(HI(buf[current]),is_temp))
       return (false);                      // please give me more space for output
 
-  if (!is_temp)
-    cur_HH=buf[current+i-1]&0xff00;        // make sure we save the HH of the *last* value in the run
+    if (is_temp) {
+      was_temp_HH=true;
+      old_HH = cur_HH;
+    }
+  }
+
+  cur_HH=buf[current+i-1]&0xff00;          // make sure we always save the HH of the *last* value in the run
 
   return (true);
 }
